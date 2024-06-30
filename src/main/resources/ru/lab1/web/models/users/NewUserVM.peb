@@ -1,0 +1,43 @@
+{# @pebvariable name="model" type="ru.lab1.web.models.users.NewUserVM" #}
+
+{% extends "../layouts/layout.peb" %}
+
+{% block title %} Добавление пользователя {% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Добавление пользователя</h2>
+<p>Для добавления пользователя заполните форму.</p>
+
+<form method="post">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col">
+            <label for="choseRole">Роль</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <input type="text" maxlength="50" class="form-control mb-2" value="{{ model.name }}" placeholder="Имя" aria-label="Имя животного" id="inputName" name="name" required>
+            <input type="text" maxlength="50" class="form-control mb-4" value="{{ model.password }}" placeholder="Пароль" aria-label="Пароль" id="inputPassword" name="password" required>
+        </div>
+
+        <div class="col">
+            <select class="form-control" id="choseRole" aria-label="Роль" name="role" required>
+                <option {{ isSelectedObjToHtml(model.role, "") }} disabled value="">Роль</option>
+                <option {{ isSelectedObjToHtml(model.role, "admin") }} value="admin">Администратор</option>
+                <option {{ isSelectedObjToHtml(model.role, "moderator") }} value="moderator">Модератор</option>
+                <option {{ isSelectedObjToHtml(model.role, "worker") }} value="worker">Работник приюта</option>
+                <option {{ isSelectedObjToHtml(model.role, "vet") }} value="vet">Ветеринар</option>
+                <option {{ isSelectedObjToHtml(model.role, "authuser") }} value="authuser">Авторизированный пользователь</option>
+            </select>
+
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-dark mb-5" id="submit">Подтвердить</button>
+
+</form>
+{% endblock %}
+

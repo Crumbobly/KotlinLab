@@ -1,0 +1,215 @@
+{# @pebvariable name="model" type="ru.lab1.web.models.animals.ListAnimalsVM" #}
+{# @pebvariable name="permission" type="ru.lab1.domain.Permissions" #}
+
+
+{% extends "../layouts/layout.peb" %}
+
+{% block link3 %}active{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Животные</h2>
+
+<div>
+    <nav>
+        <div class="d-inline-flex" >
+            <ul class="pagination" {{ getPaginatorIsHidden(model.page) }}>
+                <li class="page-item {{ getPaginatorPrevButtonsStatus(model.hasPrevPage) }}"><a class="page-link" href="{{ model.firstPageToUri }}" >&laquo;</a></li>
+                <li class="page-item {{ getPaginatorPrevButtonsStatus(model.hasPrevPage) }}"><a class="page-link" href="{{ model.prevPageToUri }}" >&lsaquo;</a></li>
+                <li class="page-item disabled"><a class="page-link">{{ model.currPageNumber }}</a></li>
+                <li class="page-item {{ getPaginatorNextButtonsStatus(model.hasNextPage) }}"><a class="page-link" href="{{ model.nextPageToUri }}" >&rsaquo;</a></li>
+                <li class="page-item {{ getPaginatorNextButtonsStatus(model.hasNextPage) }}"><a class="page-link" href="{{ model.lastPageToUri }}" >&raquo;</a></li>
+            </ul>
+
+            <span title="Отключено, т.к. плохо работает с большим объёмом данных" >
+            <a class="ms-3 disabled-link" {{ getPaginatorIsHidden(model.page) }} href="{{ model.uriWithoutPage }}"><button class="btn btn-outline-dark disabled">Показать всех животных</button></a>
+            </span>
+            <a class="mb-3" {{ getShowAllAnimalsButtonIsHidden(model.page) }} href="{{ model.firstPageToUri }}"><button class="btn btn-outline-dark">Перейти к страничному представлению</button></a>
+            {% if permission.canAddModDelHisAnimal %}
+            <a class="ms-3" href="/animals/new"><button class="btn btn-outline-dark">Добавить новое животное</button></a>
+            {% endif %}
+
+        </div>
+
+        <div class="d-inline-flex float-end">
+            <p class="m-auto mx-2">
+                Фильтры:
+            </p>
+            <button class="btn btn-dark fw-bold" data-bs-toggle="collapse" data-bs-target="#filtersCollapse" aria-expanded="false" aria-controls="filtersCollapse">{{ getFilterCountToHTML(model.name, model.type, model.familiesStrings, model.gendersString) }}</button>
+        </div>
+
+    </nav>
+</div>
+
+<div class="collapse bg-body rounded-top-3" id="filtersCollapse">
+    <div class="py-3 px-2">
+        <form method="get">
+
+            <div class="row">
+                <div class="col">
+                    <input type="text" value="{{ model.name }}" class="form-control my-auto" placeholder="Имя животного" aria-label="Имя животного" id="inputName" name="name">
+                </div>
+                <div class="col">
+                    <input type="text" value="{{ model.type }}" class="form-control my-auto" placeholder="Вид животного" aria-label="Вид животного" id="inputType" name="type">
+                </div>
+            </div>
+
+            <div class="row py-3">
+
+                <div class="col">
+                    <p class="px-4">Семейство:</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="mammal" {{ getCheckBoxStatuses(model.familiesStrings, "mammal") }} id="familyCheckBox0" name="family">
+                        <label class="form-check-label" for="familyCheckBox0">
+                            Млекопитающие
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="bird" {{ getCheckBoxStatuses(model.familiesStrings, "bird") }} id="familyCheckBox1" name="family">
+                        <label class="form-check-label" for="familyCheckBox1">
+                            Птицы
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="reptile" {{ getCheckBoxStatuses(model.familiesStrings, "reptile") }} id="familyCheckBox2" name="family">
+                        <label class="form-check-label" for="familyCheckBox2">
+                            Рептилии
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="fish" {{ getCheckBoxStatuses(model.familiesStrings, "fish") }} id="familyCheckBox3" name="family">
+                        <label class="form-check-label" for="familyCheckBox3">
+                            Рыбы
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="amphibian" {{ getCheckBoxStatuses(model.familiesStrings, "amphibian") }} id="familyCheckBox4" name="family">
+                        <label class="form-check-label" for="familyCheckBox4">
+                            Амфибии
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="invertebrate" {{ getCheckBoxStatuses(model.familiesStrings, "invertebrate") }} id="familyCheckBox5" name="family">
+                        <label class="form-check-label" for="familyCheckBox5">
+                            Беспозвоночные
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <p class="px-4">Пол:</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="male" {{ getCheckBoxStatuses(model.gendersString, "male") }} id="genderCheckBox0" name="gender">
+                        <label class="form-check-label" for="genderCheckBox0">
+                            М
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="female" {{ getCheckBoxStatuses(model.gendersString, "female") }} id="genderCheckBox1" name="gender">
+                        <label class="form-check-label" for="genderCheckBox1">
+                            Ж
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="undefined" {{ getCheckBoxStatuses(model.gendersString, "undefined") }} id="genderCheckBox2" name="gender">
+                        <label class="form-check-label" for="genderCheckBox2">
+                            Не определён
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <input class="form-check-input" hidden="hidden" type="checkbox" {{ getPageModeChecked(model.page) }} value="0" id="pageMode" name="page">
+                    <label class="form-check-label" for="pageMode">
+                    </label>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-dark" id="submitButton">Подтвердить</button>
+            <button type="reset" class="btn btn-dark" id="resetButton">Сброс</button>
+
+
+        </form>
+    </div>
+
+</div>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Пол</th>
+        <th scope="col">Вид</th>
+        <th scope="col">Семейство</th>
+        <th scope="col">Ссылка</th>
+    </tr>
+    </thead>
+    <tbody>
+            {% for animal in model.animals%}
+        <tr>
+            <th scope="row">{{ animal.id }}</th>
+            <td><a>{{ animal.name }}</a></td>
+            <td>{{ animal.gender.ru }}</td>
+            <td>{{ animal.type }}</td>
+            <td>{{ animal.family.ru }}</td>
+            <td><a href="/animals/animal{{ animal.id }}">Подробнее</a></td>
+        </tr>
+            {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+
+{% macro getCheckBoxStatuses(list, param) %}
+    {% if list contains param %}
+        checked='checked'
+    {% endif %}
+{% endmacro %}
+
+{% macro getPageModeChecked(page) %}
+    {% if page != null %}
+        checked='checked'
+    {% endif %}
+{% endmacro %}
+
+{% macro getPaginatorIsHidden(page) %}
+    {% if page == null %}
+        hidden='hidden'
+    {% endif %}
+{% endmacro %}
+
+{% macro getShowAllAnimalsButtonIsHidden(page) %}
+    {% if page != null %}
+        hidden='hidden'
+    {% endif %}
+{% endmacro %}
+
+{% macro getFilterCountToHTML(name, type, familiesStrings, gendersString) %}
+    {% set count = 0 %}
+
+    {% if name != null and name != "" %}
+        {% set count = count + 1 %}
+    {% endif %}
+
+    {% if type != null and type != "" %}
+        {% set count = count + 1 %}
+    {% endif %}
+
+    {% set count = count + familiesStrings|length %}
+    {% set count = count + gendersString|length %}
+
+    {% if count == 0 %}
+        +
+    {% else %}
+        {{ count }}
+    {% endif %}
+
+{% endmacro %}

@@ -1,0 +1,110 @@
+{# layout.peb #}
+
+{# @pebvariable name="user" type="ru.lab1.domain.User" #}
+{# @pebvariable name="permission" type="ru.lab1.domain.Permissions" #}
+
+<!doctype html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {% block title %}Список животных{% endblock %}</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/MyStyles.css" rel="stylesheet">
+    <script src="/js/bootstrap.bundle.js"></script>
+</head>
+
+<body class="bg-light p-0">
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+
+            <div class="navbar-brand fs-4">
+                <img src="/images/brand.png" class="d-inline-block" alt="">
+                Приют для животных
+            </div>
+
+            <ul class="navbar-nav">
+                {% if permission.canSeeListUser %}
+                <li class="nav-item">
+                    <a class="nav-link fs-5 {% block link1 %} {% endblock %}" href="/users">Список пользователей</a>
+                </li>
+                {% endif %}
+
+                <li class="nav-item">
+                    <a class="nav-link fs-5 {% block link2 %} {% endblock %}" href="/">Главная</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link fs-5 {% block link3 %} {% endblock %}" href="/animals?page=0">Список животных</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fs-5 myMaxWidth overflow-hidden {% block link4 %} {% endblock %}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{getUserNameOrDefault(user.name)}}
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {{getUserMenu(user.name)}}
+                    </ul>
+                </li>
+
+
+            </ul>
+        </div>
+    </nav>
+
+</header>
+
+<main class="container">
+    <div class="container mt-4 ">
+            {% block content %} {% endblock %}
+    </div>
+</main>
+</body>
+</html>
+
+{% macro getUserNameOrDefault(username) %}
+{# @pebvariable name="username" type="String" #}
+    {% if username == null %}
+    Аккаунт
+    {% else %}
+    {{ username }}
+    {% endif %}
+{% endmacro %}
+
+{% macro getUserMenu(username) %}
+{# @pebvariable name="username" type="String" #}
+    {% if username != null %}
+    <li><a class="dropdown-item" href="/logout">Выход</a></li>
+    {% else %}
+    <li><a class="dropdown-item" href="/login">Вход</a></li>
+    <li><a class="dropdown-item" href="/registration">Регистрация</a></li>
+    {% endif %}
+{% endmacro %}
+
+
+{% macro getPaginatorPrevButtonsStatus(hasPrev) %}
+{# @pebvariable name="hasPrev" type="Bool" #}
+    {% if hasPrev == false %}
+    disabled
+    {% endif %}
+{% endmacro %}
+
+
+{% macro getPaginatorNextButtonsStatus(hasNext) %}
+{# @pebvariable name="hasNext" type="Bool" #}
+    {% if hasNext == false %}
+    disabled
+    {% endif %}
+{% endmacro %}
+
+
+{% macro isSelectedObjToHtml(obj, string) %}
+{# @pebvariable name="obj" type="String" #}
+{# @pebvariable name="string" type="String" #}
+    {% if obj == string %}
+    selected
+    {% endif %}
+{% endmacro %}

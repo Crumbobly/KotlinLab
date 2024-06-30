@@ -1,0 +1,56 @@
+
+.disabled-link {
+    pointer-events: none;
+}
+
+html {
+    overflow-y:scroll;
+}
+
+.navbar-brand img{
+    width: 30px;
+    height: 30px;
+}
+
+.pagination .page-item{
+    --bs-pagination-disabled-bg: rgb(248, 249, 250);
+    --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(243, 244, 245, 0.75);
+    --bs-pagination-focus-color: none;
+    --bs-pagination-hover-color: none;
+
+}
+
+.page-link{
+    text-decoration-color: inherit;
+    color: inherit;
+}
+
+input[type="checkbox"].form-check-input:checked {
+    background-color: black;
+    border-color: black;
+
+}
+
+input[type="checkbox"].form-check-input:focus {
+    border-color: #e6e9ec;
+}
+
+input[type="checkbox"].form-check-input:checked:focus {
+    border-color: black;
+}
+
+input[type="checkbox"].form-check-input:focus{
+    box-shadow: inherit;
+}
+
+input[type="checkbox"].form-check-input:checked:focus{
+    box-shadow: 0 0 0 1px #000000, 0 0 0 0.2rem rgba(0, 0, 0, 0.5)
+}
+
+.myMaxWidth{
+    max-width: 150px;
+}
+
+p.validTextColor{
+    color: #198754;
+}

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru-RU">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {% block title %}Список животных{% endblock %}</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/MyStyles.css" rel="stylesheet">
+    <script src="js/bootstrap.bundle.js"></script>
+</head>
+
+<body class="bg-light">
+
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+
+            <div class="navbar-brand fs-4">
+                <img src="/images/brand.png" class="d-inline-block" alt="">
+                Приют для животных
+            </div>
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link fs-5 {% block link1 %} {% endblock %}" href="/">Главная</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link fs-5 {% block link2 %} {% endblock %}" href="/animals?page=0">Список животных</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+</header>
+
+<main class="container">
+    <div class="container mt-4">
+
+        <h2 class="mb-4">Добавление нового животного</h2>
+        <p>Для добавления нового животного заполните форму.</p>
+
+        <form method="post">
+            <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <label for="inputDateOfBirth">Дата рождения</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <input type="text" class="form-control mb-2" placeholder="Имя животного" aria-label="Имя животного" id="inputName" name="name" required>
+                    <input type="text" class="form-control mb-4 is-invalid" placeholder="Вид животного" aria-label="Вид животного" id="inputType" name="type">
+                    <select class="form-control mb-2" id="familySelect" aria-label="Семейство" name="inputFamily" required>
+                        <option selected disabled value="">Семейство</option>
+                        <option value="mammal">Млекопитающие</option>
+                        <option value="bird">Птицы</option>
+                        <option value="reptile">Рептилии</option>
+                        <option value="fish">Рыбы</option>
+                        <option value="amphibian">Амфибии</option>
+                        <option value="invertebrate">Беспозвоночные</option>
+                    </select>
+
+                    <select class="form-control " id="genderSelect" aria-label="Пол" name="inputGender" required>
+                        <option selected disabled value="">Пол</option>
+                        <option value="male">М</option>
+                        <option value="female">Ж</option>
+                        <option value="undefined">Не определён</option>
+                    </select>
+                </div>
+
+                <div class="col">
+                    <input type="date" class="form-control is-invalid" id="inputDateOfBirth" name="inputDateOfBirth">
+                    <select class="form-control mt-2" id="certaintyDateOfBirth" aria-label="Уверенность в дате рождения" name="inputCertaintyDateOfBirth">
+                        <option selected disabled value="">Уверенность в дате рождения</option>
+                        <option value="absolute">Абсолютный</option>
+                        <option value="high">Высокий</option>
+                        <option value="medium">Средний</option>
+                        <option value="low">Низкий</option>
+                    </select>
+                    <small class="form-text text-muted">Не обязательные параметры &uarr; </small>
+
+                    <p class="m-0 mt-2 fst-italic">Замечания:</p>
+                    <p class="m-0 fst-italic">Дата рождения не может быть больше, чем текущее время по UTC+0.</p>
+                    <p class="fst-italic">Вид животного может содержать только буквы и '-'</p>
+                </div>
+            </div>
+
+            <div class="my-3">
+                <label for="description">Описание</label>
+                <textarea class="form-control" id="description" name="inputDescription"></textarea>
+            </div>
+
+            <p>Добавить результаты анализов вы сможете позже, после добавления животного.</p>
+            <button type="submit" class="btn btn-dark mb-5" id="submit">Подтвердить</button>
+
+        </form>
+    </div>
+</main>
+</body>
+</html>

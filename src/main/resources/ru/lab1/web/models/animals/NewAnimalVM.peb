@@ -1,0 +1,75 @@
+{# @pebvariable name="model" type="ru.lab1.web.models.animals.NewAnimalVM" #}
+
+{% extends "../layouts/layout.peb" %}
+
+{% block title %} Добавление/Редактирование животного {% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Добавление/Редактирование животного</h2>
+<p>Для добавления/редактирования животного заполните форму.</p>
+
+<form method="post">
+    <div class="row">
+        <div class="col"></div>
+        <div class="col">
+            <label for="inputDateOfBirth">Дата рождения (UTC+0)</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <input type="text" maxlength="50" class="form-control mb-2" value="{{ model.name }}" placeholder="Имя животного" aria-label="Имя животного" id="inputName" name="name" required>
+            <input type="text" maxlength="50" class="form-control mb-4 {{ getIsError(model.typeError) }}" value="{{ model.type }}" placeholder="Вид животного" aria-label="Вид животного" id="inputType" name="type" required>
+            <select class="form-control mb-2" id="familySelect" aria-label="Семейство" name="family" required>
+                <option {{ isSelectedObjToHtml(model.family, "") }} disabled value="">Семейство</option>
+                <option {{ isSelectedObjToHtml(model.family, "mammal") }} value="mammal">Млекопитающие</option>
+                <option {{ isSelectedObjToHtml(model.family, "bird") }} value="bird">Птицы</option>
+                <option {{ isSelectedObjToHtml(model.family, "reptile") }} value="reptile">Рептилии</option>
+                <option {{ isSelectedObjToHtml(model.family, "fish") }} value="fish">Рыбы</option>
+                <option {{ isSelectedObjToHtml(model.family, "amphibian") }} value="amphibian">Амфибии</option>
+                <option {{ isSelectedObjToHtml(model.family, "invertebrate") }}value="invertebrate">Беспозвоночные</option>
+            </select>
+
+            <select class="form-control" id="genderSelect" aria-label="Пол" name="gender" required>
+                <option {{ isSelectedObjToHtml(model.gender, "") }} disabled value="">Пол</option>
+                <option {{ isSelectedObjToHtml(model.gender, "male") }} value="male">М</option>
+                <option {{ isSelectedObjToHtml(model.gender, "female") }} value="female">Ж</option>
+                <option {{ isSelectedObjToHtml(model.gender, "undefined") }} value="undefined">Не определён</option>
+            </select>
+        </div>
+
+        <div class="col">
+            <input type="date" class="form-control {{ getIsError(model.dateOfBirthError) }}" value="{{ model.dateOfBirth }}" id="inputDateOfBirth" name="dateOfBirth">
+            <select class="form-control mt-2" id="certaintyDateOfBirth" aria-label="Уверенность в дате рождения" name="certaintyDateOfBirth">
+                <option {{ isSelectedObjToHtml(model.certaintyDateOfBirth, "") }} disabled value="">Уверенность в дате рождения</option>
+                <option {{ isSelectedObjToHtml(model.certaintyDateOfBirth, "absolute") }} value="absolute">Абсолютный</option>
+                <option {{ isSelectedObjToHtml(model.certaintyDateOfBirth, "high") }} value="high">Высокий</option>
+                <option {{ isSelectedObjToHtml(model.certaintyDateOfBirth, "medium") }} value="medium">Средний</option>
+                <option {{ isSelectedObjToHtml(model.certaintyDateOfBirth, "low") }} value="low">Низкий</option>
+            </select>
+            <small class="form-text text-muted">Не обязательные параметры &uarr; </small>
+
+            <p class="m-0 mt-2 fst-italic">Замечания:</p>
+            <p class="m-0 fst-italic">Дата рождения не может быть больше, чем текущее время.</p>
+            <p class="fst-italic">Вид животного может содержать только буквы и '-'</p>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="description">Описание</label>
+        <textarea maxlength="200" class="form-control" id="description" name="description">{{ model.description }}</textarea>
+    </div>
+
+    <p>Добавить результаты анализов вы сможете позже, после добавления животного.</p>
+    <button type="submit" class="btn btn-dark mb-5" id="submit">Подтвердить</button>
+
+</form>
+{% endblock %}
+
+{% macro getIsError(arg) %}
+    {% if arg is not null %}
+        is-invalid
+    {% endif %}
+{% endmacro %}
+

@@ -1,0 +1,71 @@
+{# @pebvariable name="model" type="ru.lab1.web.models.users.UserVM" #}
+{# @pebvariable name="permission" type="ru.lab1.domain.Permissions" #}
+
+{% extends "../layouts/layout.peb" %}
+
+{% block title %} {{ model.user.name }}{% endblock %}
+
+{% block content %}
+<h2>Пользователь {{ model.user.id }}</h2>
+
+<p class="m-0"><b>Логин:</b> {{ model.user.name }}</p>
+<p class="m-0"><b>Дата добавления:</b> {{ model.user.datetimeOfAddingString }}</p>
+
+<div>
+    {% if permission.canAddDelUser %}
+        <p class="m-0"><b>Роль:</b></p>
+        <form method="post">
+            <textarea class="form-control" aria-label="" hidden="hidden" id="userId" name="userId">{{ model.user.id }}</textarea>
+
+            <div class="d-inline-flex mt-1">
+                <select class="form-control" id="choseRole" aria-label="Роль" name="role" required>
+                    <option {{ isSelectedObjToHtml(model.user.role.name().toLowerCase(), "") }} disabled value="">Роль</option>
+                    <option {{ isSelectedObjToHtml(model.user.role.name().toLowerCase(), "admin") }} value="admin">Администратор</option>
+                    <option {{ isSelectedObjToHtml(model.user.role.name().toLowerCase(), "moderator") }} value="moderator">Модератор</option>
+                    <option {{ isSelectedObjToHtml(model.user.role.name().toLowerCase(), "worker") }} value="worker">Работник приюта</option>
+                    <option {{ isSelectedObjToHtml(model.user.role.name().toLowerCase(), "vet") }} value="vet">Ветеринар</option>
+                    <option {{ isSelectedObjToHtml(model.user.role.name().toLowerCase(), "authuser") }} value="authuser">Авторизированный пользователь</option>
+                </select>
+                <button type="submit" class="btn btn-dark mx-3" id="submit">Ок</button>
+            </div>
+        </form>
+    {% else %}
+        <p class="m-0"><b>Роль</b>: {{ model.user.role.ru }}</p>
+    {% endif %}
+</div>
+
+<div class="mt-3">
+    {% if permission.canAddDelUser %}
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalDeleteUser">Удалить</button>
+    {% endif %}
+</div>
+
+{% if permission.canAddDelUser %}
+<div class="modal fade p-0" id="modalDeleteUser" tabindex="-1" aria-labelledby="modalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel1">Удаление пользователя</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post">
+                <textarea class="form-control" aria-label="{{ model.user.id }}" hidden="hidden" id="idToDeleteUser" name="idToDeleteUser">{{ model.user.id }}</textarea>
+
+                <div class="modal-body">
+                    Вы уверены, что хотите удалить этого пользователя?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Нет</button>
+                    <button type="submit" class="btn btn-dark">Да</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+

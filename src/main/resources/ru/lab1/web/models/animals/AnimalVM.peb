@@ -1,0 +1,144 @@
+{# @pebvariable name="model" type="ru.lab1.web.models.animals.AnimalVM" #}
+{# @pebvariable name="user" type="ru.lab1.domain.User" #}
+{# @pebvariable name="permission" type="ru.lab1.domain.Permissions" #}
+
+{% extends "../layouts/layout.peb" %}
+
+{% block title %}Животное{% endblock %}
+
+{% block content %}
+    <h2 class="d-inline-flex">Животное {{ model.animal.id }}</h2>
+
+    <p class="m-0"><b>Имя</b>: {{ model.animal.name }}</p>
+    <p class="m-0">Пол: {{ model.animal.gender.ru }}</p>
+    <p class="mt-0">Дата рождения: {{ model.animal.birthDateString }}</p>
+    <p class="m-0">Уровень уверенности в дате рождения: {{ model.animal.certaintyDateOfBirthString }}</p>
+    <p class="m-0">Вид: {{ model.animal.type }}</p>
+    <p class="mt-0">Семейство: {{ model.animal.family.ru }}</p>
+    <p class="m-0"><b>Описание</b>: {{ model.animal.description }}</p>
+    <p class="mt-0">Дата добавления животного: {{ model.animal.datetimeOfAddingString}}</p>
+    <div class="d-inline-flex mb-3">
+        {% if permission.canAddModDelAllAnimal or (permission.canAddModDelHisAnimal and user.id == model.animal.userId) %}
+            <a href="/animals/animal{{model.animal.id}}/edit" role="button" class="btn btn-dark">Редактировать</a>
+            <button type="button" class="btn btn-dark mx-3" data-bs-toggle="modal" data-bs-target="#modalDeleteAnimal">Удалить</button>
+        {% endif %}
+        {% if permission.canAddModDelVetHisExam %}
+            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalAddExam">Добавить анализ</button>
+        {% endif %}
+    </div>
+
+    <p class="m-0"><b>Анализы:</b></p>
+    <ul class="m-0">
+        {% for ex in model.animal.vetExamResults %}
+
+            <div class="d-flex">
+                <p class="m-0"><i>Дата и время добавления: </i>{{ ex.dateOfString }}</p>
+                {% if permission.canAddModDelVetHisExam %}
+                    <button class="btn m-0 px-2 py-0 mx-2" data-bs-toggle="modal" data-bs-target="#confirmationModal{{ ex.id }}">&#10005;</button>
+                {% endif %}
+            </div>
+            <p class="m-0"><i>Название клиники: </i>{{ ex.clinicName }}</p>
+            <p class="m-0"><i>Врач: </i>{{ ex.doctor }}</p>
+            <p class="m-0"><i>Результат: </i>{{ ex.examinationResult }}</p>
+            <p><i>Заключение: </i>{{ ex.conclusion }}</p>
+
+            {% if permission.canAddModDelVetHisExam %}
+            <div class="modal" tabindex="-1" role="dialog" id="confirmationModal{{ ex.id }}">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Подтверждение удаления</h5>
+                        </div>
+                        <form method="post">
+                            <textarea class="form-control" aria-label="{{ model.animal.id }}" hidden="hidden" id="idToDeleteExam" name="idToDeleteExamAnimal">{{ model.animal.id }}</textarea>
+
+                            <div class="modal-body">
+                                <p>Вы уверенны, что хотите удалить этот анализ?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Отмена</button>
+                                <button type="submit" class="btn btn-dark" name="idToDeleteExam" value={{ ex.id }}>Да</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+        {% endfor %}
+    </ul>
+
+    {% if permission.canAddModDelAllAnimal or (permission.canAddModDelHisAnimal and user.id == model.animal.userId) %}
+    <div class="modal fade p-0" id="modalDeleteAnimal" tabindex="-1" aria-labelledby="modalLabel1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel1">Удаление животного</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form method="post">
+                    <textarea class="form-control" aria-label="{{ model.animal.id }}" hidden="hidden" id="idToDeleteAnimal" name="idToDeleteAnimal">{{ model.animal.id }}</textarea>
+
+                    <div class="modal-body">
+                        Вы уверены, что хотите удалить это животное из списка?
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Нет</button>
+                        <button type="submit" class="btn btn-dark">Да</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if permission.canAddModDelVetHisExam %}
+    <div class="modal fade" id="modalAddExam" tabindex="-1" aria-labelledby="modalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel2">Добавление нового анализа</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form method="post">
+                    <textarea class="form-control" aria-label="" hidden="hidden" id="idToAddExamAnimal" name="idToAddExamAnimal">{{ model.animal.id }}</textarea>
+
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <label for="clinicName">Название клиники:</label>
+                                <input maxlength="50" class="form-control" type="text" id="clinicName" name="clinicName" required><br>
+                            </div>
+                            <div class="col">
+                                <label for="doctor">Врач:</label>
+                                <input maxlength="50" class="form-control" type="text" id="doctor" name="doctor" required><br>
+                            </div>
+                        </div>
+
+
+                        <label for="examinationResult">Результат обследования:</label>
+                        <textarea maxlength="200" class="form-control" id="examinationResult" name="examinationResult"></textarea><br>
+
+                        <label for="conclusion">Заключение:</label>
+                        <textarea maxlength="200" class="form-control" id="conclusion" name="conclusion"></textarea><br>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-dark">Добавить</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}
+

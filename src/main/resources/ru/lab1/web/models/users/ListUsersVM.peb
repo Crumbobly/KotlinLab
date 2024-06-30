@@ -1,0 +1,52 @@
+{# @pebvariable name="model" type="ru.lab1.web.models.users.ListUsersVM" #}
+{# @pebvariable name="permission" type="ru.lab1.domain.Permissions" #}
+
+
+{% extends "../layouts/layout.peb" %}
+
+{% block title %}Список пользователей{% endblock %}
+
+{% block link1 %}active{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Пользователи</h2>
+
+<div>
+    <nav>
+        <div class="d-inline-flex" >
+            <ul class="pagination">
+                <li class="page-item {{ getPaginatorPrevButtonsStatus(model.hasPrevPage) }}"><a class="page-link" href="{{ model.firstPageToUri }}" >&laquo;</a></li>
+                <li class="page-item {{ getPaginatorPrevButtonsStatus(model.hasPrevPage) }}"><a class="page-link" href="{{ model.prevPageToUri }}" >&lsaquo;</a></li>
+                <li class="page-item disabled"><a class="page-link">{{ model.page }}</a></li>
+                <li class="page-item {{ getPaginatorNextButtonsStatus(model.hasNextPage) }}"><a class="page-link" href="{{ model.nextPageToUri }}" >&rsaquo;</a></li>
+                <li class="page-item {{ getPaginatorNextButtonsStatus(model.hasNextPage) }}"><a class="page-link" href="{{ model.lastPageToUri }}" >&raquo;</a></li>
+            </ul>
+            {% if permission.getCanAddDelUser %}
+            <a class="ms-3" href="/users/new"><button class="btn btn-outline-dark">Добавить нового пользователя </button></a>
+            {% endif %}
+        </div>
+
+    </nav>
+</div>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Имя</th>
+        <th scope="col">Роль</th>
+        <th scope="col">Ссылка</th>
+    </tr>
+    </thead>
+    <tbody>
+            {% for user in model.users%}
+        <tr>
+            <th scope="row">{{ user.id }}</th>
+            <td><a>{{ user.name }}</a></td>
+            <td>{{ user.role.ru }}</td>
+            <td><a href="/users/user{{ user.id }}">Подробнее</a></td>
+        </tr>
+            {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
